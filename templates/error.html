@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ user.name }}{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h2>You entered wrong old password, go back and try again!</h2>
+    <a href="/profile/edit" class="btn btn-primary">Go back</a>
+</div>
+{% endblock content %}
