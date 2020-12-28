@@ -82,19 +82,20 @@ def edit():
     if request.method == "POST":
         name = request.form.get("name")
         email = request.form.get("email")
-        password = request.form.get("password")
         new_password = request.form.get("new_password")
+        password = request.form.get("password")
 
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
         if name:
             user.name = name
         if email:
             user.email = email
-        if password == user.password:
-            if new_password:
-                new_hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
-                user.password = new_hashed_password
+        if hashed_password == user.password:
+            new_hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
+            user.password = new_hashed_password
         else:
             return render_template("error.html", user=user)
+
         db.add(user)
         db.commit()
 
@@ -118,3 +119,10 @@ def delete():
         response.set_cookie("session_token", "")
         return response
     return render_template("delete.html", user=user)
+
+
+@app.route("/users", methods=["GET"])
+def users():
+    users = db.query(User).all()
+
+    return render_template("users.html", users=users)
